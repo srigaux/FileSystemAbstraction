@@ -50,7 +50,28 @@ public void ConfigureServices(IServiceCollection services)
 ```
 ### 3. Use the _FileSystem_ to read/write
 
-Elsewhere :
+Through [_**FileSystem** API_](./docs/api_file-system.md):
+
+```csharp
+
+// Get your fileSystem by DependencyInjection
+IFileSystem fs = services.GetService<IFileSystem>(); 
+
+// Check the file existence :
+var exists = await fs.ExistsAsync("foo/bar.txt"); // false
+if (!exists) 
+{
+    // Write "Hello world" to 'bar.txt'
+    byte[] bytes = Encoding.UTF8.GetBytes("Hello world");
+    await fs.WriteAsync("foo/bar.txt", bytes);
+}
+
+// Read 'bar.txt' content :
+bytes = await fs.ReadAllBytesAsync("foo/bar.txt");
+var result = Encoding.UTF8.GetString(bytes); // Hello world
+```
+
+Through [_**File** API_](./docs/api_file.md)
 
 ```csharp
 
@@ -74,3 +95,6 @@ if (!exists)
 bytes = await file.ReadAllBytesAsync();
 var result = Encoding.UTF8.GetString(bytes); // Hello world
 ```
+
+## Documentation
+[Check out the documentation](./docs/index.md)

@@ -28,6 +28,7 @@ namespace FileSystemAbstraction
 
         Task<long> GetSizeAsync(string key, CancellationToken cancellationToken = default(CancellationToken));
         Task<long> GetSizeAsync(string scheme, string key, CancellationToken cancellationToken = default(CancellationToken));
+
         Task<DateTime> GetLastModificationDateAsync(string key, CancellationToken cancellationToken = default(CancellationToken));
         Task<DateTime> GetLastModificationDateAsync(string scheme, string key, CancellationToken cancellationToken = default(CancellationToken));
         
