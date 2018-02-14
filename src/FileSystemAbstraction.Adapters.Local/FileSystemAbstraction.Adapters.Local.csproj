@@ -7,7 +7,7 @@
     <Authors>Sébastien Rigaux</Authors>
     <Description>Provides a 'Local' filesystem abstraction layer to FileSystemAbstraction.</Description>
     <PackageTags>FileSystemAbstraction Local local FileSystem filesystem File file Files files Abstraction abstraction Async async</PackageTags>
-    <PackageLicenseUrl>https://github.com/srigaux/FileSystemAbstraction/</PackageLicenseUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/srigaux/FileSystemAbstraction/master/license.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/srigaux/FileSystemAbstraction/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/srigaux/FileSystemAbstraction/</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

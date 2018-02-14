@@ -10,7 +10,7 @@ Inspired by Gaufrette (PHP) :
 The filesystem abstraction layer permits you to develop your application without the need to know were all those medias will be stored and how.
 
 Another advantage of this is the possibility to update the files location without any impact on the code apart from the definition of your filesystem. In example, if your project grows up very fast and if your server reaches its limits, you can easily move your medias in an Azure server or any other solution.</Description>
-    <PackageLicenseUrl>https://github.com/srigaux/FileSystemAbstraction/</PackageLicenseUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/srigaux/FileSystemAbstraction/master/license.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/srigaux/FileSystemAbstraction</PackageProjectUrl>
     <PackageIconUrl></PackageIconUrl>
     <RepositoryUrl>https://github.com/srigaux/FileSystemAbstraction</RepositoryUrl>

@@ -6,7 +6,7 @@
     <Company>Sébastien Rigaux</Company>
     <Product>FileSystemAbstraction</Product>
     <Description>Provides an 'Azure Blob Storage' filesystem abstraction layer to FileSystemAbstraction.</Description>
-    <PackageLicenseUrl>https://github.com/srigaux/FileSystemAbstraction/</PackageLicenseUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/srigaux/FileSystemAbstraction/master/license.txt</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/srigaux/FileSystemAbstraction/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/srigaux/FileSystemAbstraction/</RepositoryUrl>
     <PackageTags>FileSystemAbstraction Azure Storage Micosoft Windows Blob Cloud FileSystem filesystem File file Files files Abstraction abstraction Async async</PackageTags>
