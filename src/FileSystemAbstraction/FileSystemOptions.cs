@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FileSystemAbstraction.Adapters;
 using FileSystemAbstraction.Schemes;
+using Microsoft.Extensions.Options;
 
 namespace FileSystemAbstraction
 {
     public class FileSystemOptions
     {
         private readonly IList<FileSystemSchemeBuilder> _schemes = new List<FileSystemSchemeBuilder>();
-
-
+        
         /// <summary>
         /// Returns the schemes in the order they were added (important for request handling priority)
         /// </summary>
@@ -49,5 +50,19 @@ namespace FileSystemAbstraction
         /// Used as the fallback default scheme.
         /// </summary>
         public string DefaultScheme { get; set; }
+
+        internal class PostConfigureOption : IPostConfigureOptions<FileSystemOptions>
+        {
+            public void PostConfigure(string name, FileSystemOptions options)
+            {
+                if (options.DefaultScheme != null)
+                    return;
+                
+                if (options.SchemeMap.Count == 0)
+                    throw new InvalidOperationException("FileSystem should have at least one scheme (adapter) configured. For example, you could call '.AddLocal(...)'.");
+
+                options.DefaultScheme = options.Schemes.FirstOrDefault().Name;
+            }
+        }
     }
 }

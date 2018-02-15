@@ -16,6 +16,10 @@ Another advantage of this is the possibility to update the files location withou
     <RepositoryUrl>https://github.com/srigaux/FileSystemAbstraction</RepositoryUrl>
     <PackageTags>FileSystem filesystem File file Files files Abstraction abstraction Async async</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
+    <Version>1.0.1</Version>
+    <PackageReleaseNotes>Use the first scheme added as default if no default scheme provided.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileSystemAbstraction.Adapt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileSystemAbstraction.Adapters.AzureBlobStorage", "src\FileSystemAbstraction.Adapters.AzureBlobStorage\FileSystemAbstraction.Adapters.AzureBlobStorage.csproj", "{D66C5398-32CB-4C1F-ADFC-6F9B4EAFF322}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{EDCED19E-3D40-41E4-B580-374AE3E370FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSystemAbstraction.Sample", "samples\FileSystemAbstraction.Sample\FileSystemAbstraction.Sample.csproj", "{F1D5FDD3-827C-4B45-AE42-89090865973C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +33,10 @@ Global
 		{D66C5398-32CB-4C1F-ADFC-6F9B4EAFF322}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D66C5398-32CB-4C1F-ADFC-6F9B4EAFF322}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D66C5398-32CB-4C1F-ADFC-6F9B4EAFF322}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1D5FDD3-827C-4B45-AE42-89090865973C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1D5FDD3-827C-4B45-AE42-89090865973C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1D5FDD3-827C-4B45-AE42-89090865973C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1D5FDD3-827C-4B45-AE42-89090865973C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,6 +45,7 @@ Global
 		{E2C2F940-9F47-4141-99B6-021C348309A0} = {8A4587D3-7903-424C-A01D-DE7A607DE0E6}
 		{B818A427-FA6A-47E6-9810-8131A50F97A9} = {8A4587D3-7903-424C-A01D-DE7A607DE0E6}
 		{D66C5398-32CB-4C1F-ADFC-6F9B4EAFF322} = {8A4587D3-7903-424C-A01D-DE7A607DE0E6}
+		{F1D5FDD3-827C-4B45-AE42-89090865973C} = {EDCED19E-3D40-41E4-B580-374AE3E370FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1BAB163B-F611-42CF-A69B-C32DDB73F792}
