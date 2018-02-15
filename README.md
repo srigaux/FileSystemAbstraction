@@ -7,7 +7,7 @@ Inspired by [Gaufrette](https://knplabs.github.io/Gaufrette/) (PHP) :
 >
 >Another advantage of this is the possibility to update the files location without any impact on the code apart from the definition of your filesystem. In example, if your project grows up very fast and if your server reaches its limits, you can easily move your medias in an Azure server or any other solution.
 
-# Status
+## Status
 
 [![FileSystemAbstractionNuGet](https://img.shields.io/nuget/v/FileSystemAbstraction.svg?style=flat-square&label=FileSystemAbstraction)](https://www.nuget.org/packages/FileSystemAbstraction/)
 
@@ -16,23 +16,23 @@ Inspired by [Gaufrette](https://knplabs.github.io/Gaufrette/) (PHP) :
 | Local              | [![FileSystemAbstractionAdaptersLocalNuGet](https://img.shields.io/nuget/v/FileSystemAbstraction.Adapters.Local.svg?style=flat-square&label=FileSystemAbstraction.Adapters.Local)](https://www.nuget.org/packages/FileSystemAbstraction.Adapters.Local/) |
 | Azure Blob Storage | [![FileSystemAbstractionAdaptersAzureBlobStorageNuGet](https://img.shields.io/nuget/v/FileSystemAbstraction.Adapters.AzureBlobStorage.svg?style=flat-square&label=FileSystemAbstraction.Adapters.AzureBlobStorage)](https://www.nuget.org/packages/FileSystemAbstraction.Adapters.AzureBlobStorage/) |
 
-# Installation
+## Installation
 
 You can install it through _NuGet_:
 ```ps
 Install-Package FileSystemAbstraction
 ```
 
-# Basic Usage
+## Basic Usage
 Following an example with the local filesystem adapter. To setup adapters, look up their respective documentation.
 
-## 1. Install the Local Adapter package:
+### 1. Install the Local Adapter package:
 
 ```ps
 Install-Package FileSystemAbstraction.Adapters.Local
 ```
 
-## 2. Configure the _FileSystem_
+### 2. Configure the _FileSystem_
 
 In _AspNetCore_ project : `Startup.cs` 
 ```csharp
@@ -48,9 +48,30 @@ public void ConfigureServices(IServiceCollection services)
     //...
 }
 ```
-## 3. Use the _FileSystem_ to read/write
+### 3. Use the _FileSystem_ to read/write
 
-Elsewhere :
+Through [_**FileSystem** API_](./docs/api_file-system.md):
+
+```csharp
+
+// Get your fileSystem by DependencyInjection
+IFileSystem fs = services.GetService<IFileSystem>(); 
+
+// Check the file existence :
+var exists = await fs.ExistsAsync("foo/bar.txt"); // false
+if (!exists) 
+{
+    // Write "Hello world" to 'bar.txt'
+    byte[] bytes = Encoding.UTF8.GetBytes("Hello world");
+    await fs.WriteAsync("foo/bar.txt", bytes);
+}
+
+// Read 'bar.txt' content :
+bytes = await fs.ReadAllBytesAsync("foo/bar.txt");
+var result = Encoding.UTF8.GetString(bytes); // Hello world
+```
+
+Through [_**File** API_](./docs/api_file.md)
 
 ```csharp
 
@@ -74,3 +95,6 @@ if (!exists)
 bytes = await file.ReadAllBytesAsync();
 var result = Encoding.UTF8.GetString(bytes); // Hello world
 ```
+
+## Documentation
+[Check out the documentation](./docs/index.md)

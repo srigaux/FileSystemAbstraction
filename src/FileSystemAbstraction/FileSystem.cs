@@ -466,7 +466,10 @@ namespace FileSystemAbstraction
         {
             var exists = await ExistsAsync(adapterHolder, key, cancellationToken);
             if (!exists)
-                throw new FileNotFoundException("File not found", key);
+            {
+                var adapter = await adapterHolder.GetAdapterAsync();
+                throw new FileNotFoundException($"FileSystem '{adapter.Scheme.Name}' could not find a file with key '{key}'", key);
+            }
         }
         
         #endregion

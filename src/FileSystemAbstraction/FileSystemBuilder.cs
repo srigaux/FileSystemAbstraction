@@ -2,6 +2,8 @@
 using FileSystemAbstraction.Adapters;
 using FileSystemAbstraction.Schemes;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace FileSystemAbstraction
 {
@@ -44,8 +46,8 @@ namespace FileSystemAbstraction
             if (configureOptions != null)
                 Services.Configure(fileSystemScheme, configureOptions);
 
-            Services.AddTransient<TAdapter>(); //TODO FS Transient?
-
+            Services.TryAddSingleton<TAdapter>(); //TODO FS Transient?
+            
             return this;
         }
     }

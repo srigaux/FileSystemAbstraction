@@ -36,6 +36,9 @@ namespace FileSystemAbstraction.Adapters
         /// <returns>The adapter instance.</returns>
         public async Task<IFileSystemAdapter> GetAdapterAsync(string fileSystemScheme)
         {
+            if (fileSystemScheme == null) 
+                throw new ArgumentNullException(nameof(fileSystemScheme));
+
             if (_adapterMap.TryGetValue(fileSystemScheme, out var adapter))
                 return adapter;
 

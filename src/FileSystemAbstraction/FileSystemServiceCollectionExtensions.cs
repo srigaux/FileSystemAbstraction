@@ -3,6 +3,7 @@ using FileSystemAbstraction.Adapters;
 using FileSystemAbstraction.Schemes;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace FileSystemAbstraction
 {
@@ -12,13 +13,14 @@ namespace FileSystemAbstraction
         {
             if (services == null) throw new ArgumentNullException(nameof(services));
 
-            // Add dependentServices();
+            
+            services.AddOptions();
 
             services.TryAddSingleton<IFileSystem, FileSystem>();
             services.TryAddSingleton<IFileSystemAdapterProvider, FileSystemAdapterProvider>();
             services.TryAddSingleton<IFileSystemSchemeProvider, FileSystemSchemeProvider>();
-            services.TryAddSingleton<FileSystemOptions>();
 
+            services.AddSingleton<IPostConfigureOptions<FileSystemOptions>, FileSystemOptions.PostConfigureOption>();
 
             return new FileSystemBuilder(services);
         }
