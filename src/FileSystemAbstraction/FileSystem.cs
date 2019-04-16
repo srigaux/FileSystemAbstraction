@@ -16,14 +16,13 @@ namespace FileSystemAbstraction
         {
             AdapterProvider = adapterProvider;
             Options = options.CurrentValue;
-            FileRegister = new Dictionary<string, IFile>();
         }
 
         public IFileSystemAdapterProvider AdapterProvider { get; }
 
         public FileSystemOptions Options { get; }
 
-        protected IDictionary<string, IFile> FileRegister { get; }
+        protected IFileRegister FileRegister => Options.FileRegister;
 
         protected string DefaultScheme => Options.DefaultScheme;
 
@@ -35,6 +34,9 @@ namespace FileSystemAbstraction
 
         public Task<byte[]> ReadAllBytesAsync(string scheme, string key, CancellationToken cancellationToken)
             =>  ReadAllBytesAsync(GetAdapterHolder(scheme), key, cancellationToken);
+
+        public Task<byte[]> ReadAllBytesAsync(IFile file, CancellationToken cancellationToken)
+            => ReadAllBytesAsync(file.Scheme, file.Key, cancellationToken);
 
         public Task<byte[]> ReadAllBytesAsync(IFileSystemAdapter adapter, string key, CancellationToken cancellationToken)
             =>  ReadAllBytesAsync(GetAdapterHolder(adapter), key, cancellationToken);
@@ -65,6 +67,9 @@ namespace FileSystemAbstraction
         public Task WriteAsync(string scheme, string key, byte[] bytes, bool overwrite, CancellationToken cancellationToken)
             => WriteAsync(GetAdapterHolder(scheme), key, bytes, overwrite, cancellationToken);
 
+        public Task WriteAsync(IFile file, byte[] bytes, bool overwrite, CancellationToken cancellationToken)
+            => WriteAsync(file.Scheme, file.Key, bytes, overwrite, cancellationToken);
+
         public Task WriteAsync(IFileSystemAdapter adapter, string key, byte[] bytes, bool overwrite, CancellationToken cancellationToken)
             => WriteAsync(GetAdapterHolder(adapter), key, bytes, overwrite, cancellationToken);
 
@@ -94,6 +99,9 @@ namespace FileSystemAbstraction
         public Task WriteAsync(string scheme, string key, Stream stream, bool overwrite, CancellationToken cancellationToken)
             => WriteAsync(GetAdapterHolder(scheme), key, stream, overwrite, cancellationToken);
 
+        public Task WriteAsync(IFile file, Stream stream, bool overwrite, CancellationToken cancellationToken)
+            => WriteAsync(file.Scheme, file.Key, stream, overwrite, cancellationToken);
+
         public Task WriteAsync(IFileSystemAdapter adapter, string key, Stream stream, bool overwrite, CancellationToken cancellationToken)
             => WriteAsync(GetAdapterHolder(adapter), key, stream, overwrite, cancellationToken);
 
@@ -122,6 +130,9 @@ namespace FileSystemAbstraction
 
         public Task<long> GetSizeAsync(string scheme, string key, CancellationToken cancellationToken)
             => GetSizeAsync(GetAdapterHolder(scheme), key, cancellationToken);
+
+        public Task<long> GetSizeAsync(IFile file, CancellationToken cancellationToken)
+            => GetSizeAsync(file.Scheme, file.Key, cancellationToken);
 
         public Task<long> GetSizeAsync(IFileSystemAdapter adapter, string key, CancellationToken cancellationToken)
             => GetSizeAsync(GetAdapterHolder(adapter), key, cancellationToken);
@@ -153,6 +164,9 @@ namespace FileSystemAbstraction
         public Task<DateTime> GetLastModificationDateAsync(string scheme, string key, CancellationToken cancellationToken)
             => GetLastModificationDateAsync(GetAdapterHolder(scheme), key, cancellationToken);
 
+        public Task<DateTime> GetLastModificationDateAsync(IFile file, CancellationToken cancellationToken)
+            => GetLastModificationDateAsync(file.Scheme, file.Key, cancellationToken);
+
         public Task<DateTime> GetLastModificationDateAsync(IFileSystemAdapter adapter, string key, CancellationToken cancellationToken)
             => GetLastModificationDateAsync(GetAdapterHolder(adapter), key, cancellationToken);
 
@@ -179,6 +193,9 @@ namespace FileSystemAbstraction
 
         public Task<string> GetChecksumAsync(string scheme, string key, CancellationToken cancellationToken)
             => GetChecksumAsync(GetAdapterHolder(scheme), key, cancellationToken);
+
+        public Task<string> GetChecksumAsync(IFile file, CancellationToken cancellationToken)
+            => GetChecksumAsync(file.Scheme, file.Key, cancellationToken);
 
         public Task<string> GetChecksumAsync(IFileSystemAdapter adapter, string key, CancellationToken cancellationToken)
             => GetChecksumAsync(GetAdapterHolder(adapter), key, cancellationToken);
@@ -211,6 +228,9 @@ namespace FileSystemAbstraction
         public Task<bool> ExistsAsync(string scheme, string key, CancellationToken cancellationToken)
             => ExistsAsync(GetAdapterHolder(scheme), key, cancellationToken);
 
+        public Task<bool> ExistsAsync(IFile file, CancellationToken cancellationToken)
+            => ExistsAsync(file.Scheme, file.Key, cancellationToken);
+
         public Task<bool> ExistsAsync(IFileSystemAdapter adapter, string key, CancellationToken cancellationToken)
             => ExistsAsync(GetAdapterHolder(adapter), key, cancellationToken);
 
@@ -236,6 +256,9 @@ namespace FileSystemAbstraction
         public Task DeleteAsync(string scheme, string key, CancellationToken cancellationToken)
             => DeleteAsync(GetAdapterHolder(scheme), key, cancellationToken);
 
+        public Task DeleteAsync(IFile file, CancellationToken cancellationToken)
+            => DeleteAsync(file.Scheme, file.Key, cancellationToken);
+
         public Task DeleteAsync(IFileSystemAdapter adapter, string key, CancellationToken cancellationToken)
             => DeleteAsync(GetAdapterHolder(adapter), key, cancellationToken);
 
@@ -252,7 +275,7 @@ namespace FileSystemAbstraction
                 await ThrowIfNotExistsAsync(adapter, key, cancellationToken);
                 
                 await adapter.DeleteAsync(key, cancellationToken);
-                FileRegister.Remove(key);
+                await FileRegister.RemoveAsync(adapterHolder.Scheme, key, cancellationToken);
             }
         }
 
@@ -320,6 +343,9 @@ namespace FileSystemAbstraction
         public Task ReadToStreamAsync(string scheme, string key, Stream toStream, CancellationToken cancellationToken)
             => ReadToStreamAsync(GetAdapterHolder(scheme), key, toStream, cancellationToken);
 
+        public Task ReadToStreamAsync(IFile file, Stream toStream, CancellationToken cancellationToken)
+            => ReadToStreamAsync(file.Scheme, file.Key, toStream, cancellationToken);
+
         public Task ReadToStreamAsync(IFileSystemAdapter adapter, string key, Stream toStream, CancellationToken cancellationToken)
             => ReadToStreamAsync(GetAdapterHolder(adapter), key, toStream, cancellationToken);
 
@@ -352,8 +378,18 @@ namespace FileSystemAbstraction
             var adapterHolder = GetAdapterHolder(DefaultScheme);
             return RenameAsync(adapterHolder, sourceKey, adapterHolder, targetKey, cancellationToken);
         }
+
+        public Task RenameAsync(string scheme, string sourceKey, string targetKey, CancellationToken cancellationToken)
+            => RenameAsync(GetAdapterHolder(scheme), sourceKey, GetAdapterHolder(scheme), targetKey, cancellationToken);
+
+        public Task RenameAsync(IFile file, string targetKey, CancellationToken cancellationToken)
+            => RenameAsync(file.Scheme, file.Key, file.Scheme, targetKey, cancellationToken);
+
         public Task RenameAsync(string sourceScheme, string sourceKey, string targetScheme, string targetKey, CancellationToken cancellationToken)
             => RenameAsync(GetAdapterHolder(sourceScheme), sourceKey, GetAdapterHolder(targetScheme), targetKey, cancellationToken);
+
+        public Task RenameAsync(IFile file, string targetScheme, string targetKey, CancellationToken cancellationToken)
+            => RenameAsync(file.Scheme, file.Key, targetScheme, targetKey, cancellationToken);
 
         public Task RenameAsync(IFileSystemAdapter sourceAdapter, string sourceKey, IFileSystemAdapter targetAdapter, string targetKey, CancellationToken cancellationToken)
             => RenameAsync(GetAdapterHolder(sourceAdapter), sourceKey, GetAdapterHolder(targetAdapter), targetKey, cancellationToken);
@@ -385,10 +421,13 @@ namespace FileSystemAbstraction
                 if (!renamedSuccess)
                     throw new IOException($"Could not rename the '{sourceKey}' key to '{targetKey}'");
 
-                if (FileRegister.ContainsKey(sourceKey))
+                var sourceFile =
+                    await FileRegister.GetOrDefaultAsync(sourceAdapterHolder.Scheme, sourceKey, cancellationToken);
+
+                if (sourceFile != null)
                 {
-                    FileRegister[targetKey] = FileRegister[sourceKey];
-                    FileRegister.Remove(sourceKey);
+                    await FileRegister.StoreAsync(targetAdapterHolder.Scheme, targetKey, sourceFile, cancellationToken);
+                    await FileRegister.RemoveAsync(sourceAdapterHolder.Scheme, sourceKey, cancellationToken);
                 }
             }
         }
@@ -399,7 +438,7 @@ namespace FileSystemAbstraction
 
         public Task<IFile> GetAsync(string scheme, string key, bool create, CancellationToken cancellationToken)
             => GetAsync(GetAdapterHolder(scheme), key, create, cancellationToken);
-
+        
         public Task<IFile> GetAsync(IFileSystemAdapter adapter, string key, bool create, CancellationToken cancellationToken)
             => GetAsync(GetAdapterHolder(adapter), key, create, cancellationToken);
 
@@ -428,25 +467,26 @@ namespace FileSystemAbstraction
         public Task<IFile> CreateFileAsync(IFileSystemAdapter adapter, string key, CancellationToken cancellationToken)
             => CreateFileAsync(GetAdapterHolder(adapter), key, cancellationToken);
 
-        private Task<IFile> CreateFileAsync(AdapterHolder adapterHolder, string key, CancellationToken cancellationToken)
+        private async Task<IFile> CreateFileAsync(AdapterHolder adapterHolder, string key, CancellationToken cancellationToken)
         {
             if (key == null) throw new ArgumentNullException(nameof(key));
 
-            if (FileRegister.ContainsKey(key))
-                return Task.FromResult(FileRegister[key]);
+            var file =
+                await FileRegister.GetOrDefaultAsync(adapterHolder.Scheme, key, cancellationToken);
+
+            if (file != null)
+                return file;
             
-            return CreateFileAsyncImpl();
+            var adapter = await adapterHolder.GetAdapterAsync();
+            if (adapter is IFileFactory fileFactory)
+                file = await fileFactory.CreateFileAsync(key, this, cancellationToken);
+            else
+                file = new File(adapterHolder.Scheme, key, this);
 
-            async Task<IFile> CreateFileAsyncImpl()
-            {
-                var adapter = await adapterHolder.GetAdapterAsync();
-                if (adapter is IFileFactory fileFactory)
-                    FileRegister[key] = await fileFactory.CreateFileAsync(key, this, cancellationToken);
-                else
-                    FileRegister[key] = new File(adapter.Scheme.Name, key, this);
+            await FileRegister.StoreAsync(adapterHolder.Scheme, key, file, cancellationToken);
 
-                return FileRegister[key];
-            }
+            return file;
+            
         }
 
 
@@ -456,9 +496,17 @@ namespace FileSystemAbstraction
         public Task ThrowIfNotExistsAsync(string scheme, string key, CancellationToken cancellationToken)
             => ThrowIfNotExistsAsync(GetAdapterHolder(scheme), key, cancellationToken);
 
+        public Task ThrowIfNotExistsAsync(IFile file, CancellationToken cancellationToken)
+            => ThrowIfNotExistsAsync(file.Scheme, file.Key, cancellationToken);
+
+
+        public Task<IFileSystemAdapter> GetAdapterAsync(IFile file)
+            => GetAdapterAsync(file.Scheme);
+
         public Task<IFileSystemAdapter> GetAdapterAsync(string scheme)
             => AdapterProvider.GetAdapterAsync(scheme);
 
+        
         public Task ThrowIfNotExistsAsync(IFileSystemAdapter adapter, string key, CancellationToken cancellationToken)
             => ThrowIfNotExistsAsync(GetAdapterHolder(adapter), key, cancellationToken);
 
@@ -481,6 +529,9 @@ namespace FileSystemAbstraction
 
         public Task<string> GetMimeTypeAsync(string scheme, string key, CancellationToken cancellationToken)
             => GetMimeTypeAsync(GetAdapterHolder(scheme), key, cancellationToken);
+
+        public Task<string> GetMimeTypeAsync(IFile file, CancellationToken cancellationToken)
+            => GetMimeTypeAsync(file.Scheme, file.Key, cancellationToken);
 
         public Task<string> GetMimeTypeAsync(IFileSystemAdapter adapter, string key, CancellationToken cancellationToken)
             => GetMimeTypeAsync(GetAdapterHolder(adapter), key, cancellationToken);
@@ -508,7 +559,7 @@ namespace FileSystemAbstraction
         
         private AdapterHolder GetAdapterHolder(string scheme)
             => new AdapterHolder(scheme, this);
-
+        
         private static AdapterHolder GetAdapterHolder(IFileSystemAdapter adapter)
             => new AdapterHolder(adapter);
         
@@ -531,7 +582,11 @@ namespace FileSystemAbstraction
                 _adapterProvider = fileSystem.AdapterProvider;
             }
 
-            public AdapterHolder(IFileSystemAdapter adapter) => _adapter = adapter;
+            public AdapterHolder(IFileSystemAdapter adapter)
+            {
+                _scheme = adapter.Scheme.Name;
+                _adapter = adapter;
+            }
 
             public Task<IFileSystemAdapter> GetAdapterAsync()
             {
@@ -540,6 +595,8 @@ namespace FileSystemAbstraction
 
                 return _adapterProvider.GetAdapterAsync(_scheme);
             }
+
+            public string Scheme => _scheme;
         }
     }
 }

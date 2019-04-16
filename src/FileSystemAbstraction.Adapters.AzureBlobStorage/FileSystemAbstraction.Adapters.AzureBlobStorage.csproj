@@ -12,6 +12,9 @@
     <PackageTags>FileSystemAbstraction Azure Storage Micosoft Windows Blob Cloud FileSystem filesystem File file Files files Abstraction abstraction Async async</PackageTags>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
+    <FileVersion>1.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

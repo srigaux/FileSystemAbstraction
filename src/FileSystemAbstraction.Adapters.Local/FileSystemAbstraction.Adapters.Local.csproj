@@ -11,6 +11,9 @@
     <PackageProjectUrl>https://github.com/srigaux/FileSystemAbstraction/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/srigaux/FileSystemAbstraction/</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.1.0</Version>
+    <AssemblyVersion>1.1.0</AssemblyVersion>
+    <FileVersion>1.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

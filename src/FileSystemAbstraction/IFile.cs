@@ -8,6 +8,7 @@ namespace FileSystemAbstraction
 {
     public interface IFile
     {
+        string Scheme { get; }
         string Key { get; }
 
         /// <summary>
