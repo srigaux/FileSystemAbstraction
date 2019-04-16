@@ -16,7 +16,7 @@ namespace FileSystemAbstraction
             FileSystem = fileSystem;
         }
 
-        public string Scheme { get; }
+        public string Scheme { get; private set; }
         public string Key { get; private set; }
 
         public IFileSystem FileSystem { get; }
@@ -37,13 +37,13 @@ namespace FileSystemAbstraction
 
             await SetMetadataAsync(metadata, cancellationToken);
 
-            _content = await FileSystem.ReadAllBytesAsync(Key, cancellationToken);
+            _content = await FileSystem.ReadAllBytesAsync(Scheme, Key, cancellationToken);
 
             return _content;
         }
         
         public Task ReadToStreamAsync(Stream toStream, CancellationToken cancellationToken) 
-            => FileSystem.ReadToStreamAsync(Key, toStream, cancellationToken);
+            => FileSystem.ReadToStreamAsync(Scheme, Key, toStream, cancellationToken);
 
         public Task WriteAsync(byte[] bytes, bool overwrite, CancellationToken cancellationToken)
         {
@@ -53,7 +53,7 @@ namespace FileSystemAbstraction
 
             async Task WriteAsyncImpl()
             {
-                await FileSystem.WriteAsync(Key, bytes, overwrite, cancellationToken);
+                await FileSystem.WriteAsync(Scheme, Key, bytes, overwrite, cancellationToken);
 
                 _content = bytes;
             }
@@ -67,7 +67,7 @@ namespace FileSystemAbstraction
 
             async Task WriteAsyncImpl()
             {
-                await FileSystem.WriteAsync(Key, stream, overwrite, cancellationToken);
+                await FileSystem.WriteAsync(Scheme, Key, stream, overwrite, cancellationToken);
 
                 _content = null;
             }
@@ -101,7 +101,7 @@ namespace FileSystemAbstraction
 
             try
             {
-                var size = await FileSystem.GetSizeAsync(Key, cancellationToken);
+                var size = await FileSystem.GetSizeAsync(Scheme, Key, cancellationToken);
                 _size = size;
                 return size;
             }
@@ -119,7 +119,7 @@ namespace FileSystemAbstraction
         private DateTime? _lastModificationDate;
         public async Task<DateTime> GetLastModificationDateAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            var lastModificationDate = await FileSystem.GetLastModificationDateAsync(Key, cancellationToken);
+            var lastModificationDate = await FileSystem.GetLastModificationDateAsync(Scheme, Key, cancellationToken);
             _lastModificationDate = lastModificationDate;
             return lastModificationDate;
         }
@@ -127,7 +127,7 @@ namespace FileSystemAbstraction
         private string _checksum;
         public async Task<string> GetChecksumAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            var checksum = await FileSystem.GetChecksumAsync(Key, cancellationToken);
+            var checksum = await FileSystem.GetChecksumAsync(Scheme, Key, cancellationToken);
             _checksum = checksum;
             return checksum;
         }
@@ -135,7 +135,7 @@ namespace FileSystemAbstraction
         private string _mimeType;
         public async Task<string> GetMimeTypeAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            var mimeType = await FileSystem.GetMimeTypeAsync(Key, cancellationToken);
+            var mimeType = await FileSystem.GetMimeTypeAsync(Scheme, Key, cancellationToken);
             _mimeType = mimeType;
             return mimeType;
         }
@@ -143,18 +143,18 @@ namespace FileSystemAbstraction
 
         public Task<bool> ExistsAsync(CancellationToken cancellationToken)
         {
-            return FileSystem.ExistsAsync(Key, cancellationToken);
+            return FileSystem.ExistsAsync(Scheme, Key, cancellationToken);
         }
         
         public async Task DeleteAsync(IDictionary<string, string> metadata, CancellationToken cancellationToken)
         {
             await SetMetadataAsync(metadata, cancellationToken);
-            await FileSystem.DeleteAsync(Key, cancellationToken);
+            await FileSystem.DeleteAsync(Scheme, Key, cancellationToken);
         }
         
         public async Task RenameAsync(string newKey, CancellationToken cancellationToken)
         {
-            await FileSystem.RenameAsync(Key, newKey, cancellationToken);
+            await FileSystem.RenameAsync(Scheme, Key, newKey, cancellationToken);
 
             Key = newKey;
         }
@@ -200,7 +200,7 @@ namespace FileSystemAbstraction
             if (fileSystemAdapter is IMetadataSupporter metadataSupporter)
                 return metadataSupporter;
 
-            throw new NotSupportedException($"The '{Scheme}' filesystem does not support the metadata.");
+            return null;
         }
 
         public async Task<IMetadataSupporter> GetMetaDataSupporterOrThrowAsync()

@@ -46,7 +46,7 @@ namespace FileSystemAbstraction
             if (configureOptions != null)
                 Services.Configure(fileSystemScheme, configureOptions);
 
-            Services.TryAddSingleton<TAdapter>(); //TODO FS Transient?
+            Services.TryAddTransient<TAdapter>();
             
             return this;
         }

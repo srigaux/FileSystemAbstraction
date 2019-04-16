@@ -55,7 +55,7 @@ namespace FileSystemAbstraction
             if (configureOptions != null)
                 services.Configure(scheme, configureOptions);
 
-            services.AddTransient<TAdapter>(); //TODO FS AddSingleton ??
+            services.AddTransient<TAdapter>();
 
             return services;
         }
@@ -63,6 +63,8 @@ namespace FileSystemAbstraction
         public static IServiceCollection AddFileSystemScheme<TOptions, TAdapter>(this IServiceCollection services, string scheme, Action<TOptions> configureOptions)
             where TOptions : FileSystemSchemeOptions, new()
             where TAdapter : FileSystemAdapter<TOptions>
-            => services.AddFileSystemScheme<TOptions, TAdapter>(scheme, null, configureOptions);
+        {
+            return services.AddFileSystemScheme<TOptions, TAdapter>(scheme, null, configureOptions);
+        }
     }
 }
